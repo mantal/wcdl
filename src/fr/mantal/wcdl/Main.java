@@ -1,51 +1,17 @@
 package fr.mantal.wcdl;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+public class Main
+{
+	public static void main(String[] args)
+	{
+		String localPath = args.length > 1 ? args[0] : "C:\\Users\\Username\\Pictures\\";
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
+		Downloader phdcomics = new Downloader("#comic", "td[align=left]>a", "http://www.phdcomics.com/comics/", "archive.php?comicid=1", localPath + "PHD comics\\");
+		Downloader sinfest = new Downloader("td[colspan=\"2\"]>img", "table[border=\"0\"] td.style5>a", "http://www.sinfest.net/", "view.php?date=2000-01-17", localPath + "sinfest\\");
+		Downloader darkLegacy = new Downloader(".comic-image", ".nextLink", "http://www.darklegacycomics.com/", "1", localPath + "Dark Legacy\\");
 
-public class Main {
-	private static boolean fileExist(String file) {
-		File f = new File(file);
-		return f.isFile(); 
-	}
-	
-	public static void main(String[] args) {
-		
-		String url = "http://www.phdcomics.com/comics/archive.php?comicid=";
-		String baseFile = "D:/Pictures/Comics/phd comics/";
-
-		for (int i = 0; i <= 1885; i++) {
-			String file = baseFile + i + ".gif";
-			
-			if (fileExist(file))
-				continue;
-			
-			Document doc = null;
-			try {
-				doc = Jsoup.connect(url + i).get();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			try {
-				FileUtils.copyURLToFile(new URL(doc.select("#comic").attr("src")), new File(file));
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		phdcomics.download();
+		sinfest.download();
+		darkLegacy.download();
 	}
 }
