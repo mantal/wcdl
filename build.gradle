@@ -24,7 +24,7 @@ sourceSets {
 
 // Maven Artefacts Info
 group = "fr.mantal"
-archivesBaseName = 'WCDL'
+archivesBaseName = 'wcdl'
 
 //IDE
 apply plugin: 'eclipse'
