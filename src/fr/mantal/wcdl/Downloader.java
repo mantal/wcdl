@@ -11,7 +11,6 @@ import java.net.URL;
 
 public class Downloader
 {
-
 	private String imageSelector;
 	private String nextLinkSelector;
 
@@ -20,7 +19,9 @@ public class Downloader
 	//Must end with path separator
 	private String localPath;
 
-	public Downloader(String imageSelector, String nextLinkSelector, String baseUrl, String startPath, String localPath)
+	private String fileFormat;
+
+	public Downloader(String imageSelector, String nextLinkSelector, String baseUrl, String startPath, String localPath, String fileFormat)
 	{
 
 		this.imageSelector = imageSelector;
@@ -28,6 +29,7 @@ public class Downloader
 		this.baseUrl = baseUrl;
 		this.startPath = startPath;
 		this.localPath = localPath;
+		this.fileFormat = fileFormat;
 	}
 
 	public void download()
@@ -45,11 +47,11 @@ public class Downloader
 		}
 
 		Document document = null;
+		int i = 1;
 
-		int i = 1;//TODO
 		do
 		{
-			String file = localPath + i++ + ".gif";
+			String file = localPath + i + fileFormat;
 
 			try
 			{
@@ -66,6 +68,7 @@ public class Downloader
 
 			copyImageToFile(document, new File(file));
 
+			i++;
 		} while((url = getNextUrl(document)) != null);
 	}
 
