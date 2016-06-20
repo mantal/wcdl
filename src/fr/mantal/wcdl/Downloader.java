@@ -24,17 +24,15 @@ public class Downloader
 	private String titleSelector = null;
 	private String titleRegex = null;
 
-	private String fileFormat;
+	private String fileFormat = null;
 
-	Downloader(String imageSelector, String nextLinkSelector, String baseUrl, String startPath, String localPath, String fileFormat)
+	Downloader(String imageSelector, String nextLinkSelector, String baseUrl, String startPath, String localPath)
 	{
-
 		this.imageSelector = imageSelector;
 		this.nextLinkSelector = nextLinkSelector;
 		this.baseUrl = baseUrl;
+		this.localPath = localPath + File.separator;
 		this.startPath = startPath;
-		this.localPath = localPath;
-		this.fileFormat = fileFormat;
 	}
 
 	Downloader Title(String titleSelector)
@@ -79,6 +77,9 @@ public class Downloader
 				e.printStackTrace();
 			}
 
+			if (fileFormat == null)
+				fileFormat = getFileFormat(document);
+
 			String file = localPath + i + " - " + getTitleName(document) + fileFormat;
 
 			if (fileExist(file))
@@ -88,6 +89,12 @@ public class Downloader
 
 			i++;
 		} while((url = getNextUrl(document)) != null);
+	}
+
+	private String getFileFormat(Document document) {
+		String imgUrl = document.select(imageSelector).attr("src");
+
+		return imgUrl.substring(imgUrl.lastIndexOf('.'), imgUrl.length());
 	}
 
 	private String getTitleName(Document document)
