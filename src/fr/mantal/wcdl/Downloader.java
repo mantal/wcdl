@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Downloader
 {
@@ -19,9 +21,12 @@ public class Downloader
 	//Must end with path separator
 	private String localPath;
 
+	private String titleSelector = null;
+	private String titleRegex = null;
+
 	private String fileFormat;
 
-	public Downloader(String imageSelector, String nextLinkSelector, String baseUrl, String startPath, String localPath, String fileFormat)
+	Downloader(String imageSelector, String nextLinkSelector, String baseUrl, String startPath, String localPath, String fileFormat)
 	{
 
 		this.imageSelector = imageSelector;
@@ -32,9 +37,22 @@ public class Downloader
 		this.fileFormat = fileFormat;
 	}
 
-	public void download()
+	Downloader Title(String titleSelector)
 	{
-		URL url = null;
+		return Title(titleSelector, null);
+	}
+
+	Downloader Title(String titleSelector, String titleRegex)
+	{
+		this.titleSelector = titleSelector;
+		this.titleRegex = titleRegex;
+
+		return this;
+	}
+
+	void download()
+	{
+		URL url;
 
 		try
 		{
@@ -51,8 +69,6 @@ public class Downloader
 
 		do
 		{
-			String file = localPath + i + fileFormat;
-
 			try
 			{
 				document = Jsoup.connect(url.toString()).get();
@@ -63,6 +79,8 @@ public class Downloader
 				e.printStackTrace();
 			}
 
+			String file = localPath + i + " - " + getTitleName(document) + fileFormat;
+
 			if (fileExist(file))
 				continue;
 
@@ -70,6 +88,23 @@ public class Downloader
 
 			i++;
 		} while((url = getNextUrl(document)) != null);
+	}
+
+	private String getTitleName(Document document)
+	{
+		if (titleSelector == null)
+			return "";
+
+		String text = document.select(titleSelector).text();
+
+		if (titleRegex == null)
+			return text;
+
+		Matcher matcher = Pattern.compile(titleRegex).matcher(text);
+
+		if (!matcher.find())
+			return "REGEX DOES NOT MATCHES";
+		return matcher.group(1);
 	}
 
 	private boolean copyImageToFile(Document document, File file)
