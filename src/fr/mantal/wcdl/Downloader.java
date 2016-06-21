@@ -153,7 +153,11 @@ public class Downloader
 	private String fixUrl(String url)
 	{
 		if (!url.startsWith("http"))
+		{
+			if (url.charAt(0) == '/')
+				url = url.substring(1);
 			url = baseUrl + url;
+		}
 		return url;
 	}
 
