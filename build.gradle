@@ -54,4 +54,5 @@ repositories {
 dependencies {
     compile "commons-io:commons-io:2.5"
     compile "org.jsoup:jsoup:1.9.2"
+    compile "com.google.code.gson:gson:2.7"
 }

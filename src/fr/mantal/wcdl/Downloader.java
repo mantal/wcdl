@@ -1,5 +1,6 @@
 package fr.mantal.wcdl;
 
+import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,7 +13,6 @@ import java.nio.file.Paths;
 
 public class Downloader
 {
-
 	private String baseUrl;
 	private String startPath;
 	private String localPath;
@@ -22,6 +22,19 @@ public class Downloader
 	private Property title;
 
 	private String imageFormat = null;
+
+	static Downloader FromConfig(String workingDirectory)//todo better name
+	{
+		String file = null;
+		try {
+			file = FileUtils.readFileToString(new File(Paths.get(workingDirectory, ".wcdl.config").toString()), "utf-8");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Downloader res = new Gson().fromJson(file, Downloader.class);
+		res.localPath = workingDirectory + File.separator;
+		return res;
+	}
 
 	Downloader(String imageSelector, String nextLinkSelector, String baseUrl, String startPath, String localPath)
 	{
