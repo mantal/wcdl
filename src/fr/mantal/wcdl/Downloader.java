@@ -8,45 +8,34 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Downloader
 {
-	private String imageSelector;
-	private String nextLinkSelector;
 
 	private String baseUrl;
 	private String startPath;
-	//Must end with path separator
 	private String localPath;
 
-	private String titleSelector = null;
-	private String titleRegex = null;
+	private Property image;
+	private Property next;
+	private Property title;
 
 	private String imageFormat = null;
 
 	Downloader(String imageSelector, String nextLinkSelector, String baseUrl, String startPath, String localPath)
 	{
-		this.imageSelector = imageSelector;
-		this.nextLinkSelector = nextLinkSelector;
+		this.image = new Property(imageSelector, "src");
+		this.next = new Property(nextLinkSelector, "href");
+		this.title = new Property();
 		this.baseUrl = baseUrl;
 		this.localPath = localPath + File.separator;
 		this.startPath = startPath;
 	}
 
-	Downloader Title(String titleSelector)
+	Downloader Title(Property title)
 	{
-		return Title(titleSelector, null);
-	}
-
-	Downloader Title(String titleSelector, String titleRegex)
-	{
-		this.titleSelector = titleSelector;
-		this.titleRegex = titleRegex;
-
+		this.title = title;
 		return this;
 	}
 
@@ -88,7 +77,7 @@ public class Downloader
 			if (imageFormat == null)
 				imageFormat = getFileFormat(document);
 
-			File file = Paths.get(localPath + i + " - " + getTitleName(document) + imageFormat).toFile();
+			File file = Paths.get(localPath + i + " - " + escapePath(title.get(document)) + imageFormat).toFile();
 
 			i++;
 			if (fileExist(file))
@@ -100,7 +89,7 @@ public class Downloader
 	}
 
 	private String getFileFormat(Document document) {
-		String imgUrl = document.select(imageSelector).attr("src");
+		String imgUrl = image.get(document);
 
 		return imgUrl.substring(imgUrl.lastIndexOf('.'), imgUrl.length());
 	}
@@ -110,26 +99,9 @@ public class Downloader
 		return path.replace('/', '-').replace('\\', '-').replace('?', '-');//todo regex
 	}
 
-	private String getTitleName(Document document)
-	{
-		if (titleSelector == null)
-			return "";
-
-		String text = document.select(titleSelector).first().text();
-
-		if (titleRegex == null)
-			return escapePath(text);
-
-		Matcher matcher = Pattern.compile(titleRegex).matcher(text);
-
-		if (!matcher.find())
-			return "REGEX DOES NOT MATCHES";
-		return escapePath(matcher.group(1));
-	}
-
 	private boolean copyImageToFile(Document document, File file)
 	{
-		String url = document.select(imageSelector).first().attr("src");
+		String url = image.get(document);
 
 		url = fixUrl(url);
 		try
@@ -146,7 +118,7 @@ public class Downloader
 
 	private URL getNextUrl(Document document)
 	{
-		String url = document.select(nextLinkSelector).first().attr("href");
+		String url = next.get(document);
 
 		if (url.isEmpty())
 			return null;
