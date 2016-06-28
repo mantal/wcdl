@@ -115,7 +115,7 @@ public class Downloader
 		if (titleSelector == null)
 			return "";
 
-		String text = document.select(titleSelector).text();
+		String text = document.select(titleSelector).first().text();
 
 		if (titleRegex == null)
 			return escapePath(text);
@@ -129,7 +129,7 @@ public class Downloader
 
 	private boolean copyImageToFile(Document document, File file)
 	{
-		String url = document.select(imageSelector).attr("src");
+		String url = document.select(imageSelector).first().attr("src");
 
 		url = fixUrl(url);
 		try
@@ -146,7 +146,7 @@ public class Downloader
 
 	private URL getNextUrl(Document document)
 	{
-		String url = document.select(nextLinkSelector).attr("href");
+		String url = document.select(nextLinkSelector).first().attr("href");
 
 		if (url.isEmpty())
 			return null;
