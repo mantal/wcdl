@@ -90,12 +90,12 @@ public class Downloader
 
 			File file = Paths.get(localPath + i + " - " + getTitleName(document) + imageFormat).toFile();
 
+			i++;
 			if (fileExist(file))
 				continue;
 
 			copyImageToFile(document, file);
 
-			i++;
 		} while((url = getNextUrl(document)) != null);
 	}
 
