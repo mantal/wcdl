@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,12 +88,12 @@ public class Downloader
 			if (imageFormat == null)
 				imageFormat = getFileFormat(document);
 
-			String file = localPath + i + " - " + getTitleName(document) + imageFormat;
+			File file = Paths.get(localPath + i + " - " + getTitleName(document) + imageFormat).toFile();
 
 			if (fileExist(file))
 				continue;
 
-			copyImageToFile(document, new File(file));
+			copyImageToFile(document, file);
 
 			i++;
 		} while((url = getNextUrl(document)) != null);
@@ -103,6 +105,11 @@ public class Downloader
 		return imgUrl.substring(imgUrl.lastIndexOf('.'), imgUrl.length());
 	}
 
+	private String escapePath(String path)
+	{
+		return path.replace('/', '-').replace('\\', '-').replace('?', '-');//todo regex
+	}
+
 	private String getTitleName(Document document)
 	{
 		if (titleSelector == null)
@@ -111,13 +118,13 @@ public class Downloader
 		String text = document.select(titleSelector).text();
 
 		if (titleRegex == null)
-			return text;
+			return escapePath(text);
 
 		Matcher matcher = Pattern.compile(titleRegex).matcher(text);
 
 		if (!matcher.find())
 			return "REGEX DOES NOT MATCHES";
-		return matcher.group(1);
+		return escapePath(matcher.group(1));
 	}
 
 	private boolean copyImageToFile(Document document, File file)
@@ -167,9 +174,8 @@ public class Downloader
 		return url;
 	}
 
-	private static boolean fileExist(String file)
+	private static boolean fileExist(File file)
 	{
-		File res = new File(file);
-		return res.isFile() && res.exists();
+		return file.isFile() && file.exists();//todo check
 	}
 }
