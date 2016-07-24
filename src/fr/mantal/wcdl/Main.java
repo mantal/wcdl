@@ -8,6 +8,9 @@ public class Main
 	{
 		String localPath = args.length > 1 ? args[0] : Paths.get(System.getProperty("user.home"), "Pictures", "Comics").toString();
 
+		if (args.length >= 1)
+			Downloader.FromConfig(args[0]).download();
+
 		Downloader phdcomics = Downloader.FromConfig(Paths.get(localPath, "PHD comics").toString());
 		Downloader sinfest = Downloader.FromConfig(Paths.get(localPath, "Sinfest").toString());
 		Downloader darkLegacy = new Downloader(".comic-image", ".nextLink", "http://www.darklegacycomics.com/", "1", Paths.get(localPath, "Dark Legacy").toString()).Title(new Property("title"));
@@ -18,6 +21,6 @@ public class Main
 		//sinfest.download();
 		//darkLegacy.download();
 		//dilbert.download();
-		theDevilsPanties.download();
+		//theDevilsPanties.download();
 	}
 }

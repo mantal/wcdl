@@ -23,7 +23,7 @@ public class Downloader
 
 	private String imageFormat = null;
 
-	static Downloader FromConfig(String workingDirectory)//todo better name
+	static Downloader FromConfig(String workingDirectory)//todo better param name
 	{
 		String file = null;
 		try {
