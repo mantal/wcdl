@@ -23,19 +23,21 @@ public class Downloader
 
 	private String imageFormat = null;
 
-	static Downloader FromConfig(String workingDirectory)//todo better param name
+	static Downloader fromConfig(String path)//todo better param name
 	{
 		String file = null;
 		try {
-			file = FileUtils.readFileToString(new File(Paths.get(workingDirectory, ".wcdl.config").toString()), "utf-8");
+			file = FileUtils.readFileToString(new File(path), "utf-8");
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Can not open config file: " + e.getMessage());
+			System.exit(ExitError.CONFIG_OPEN_ERROR);
 		}
 		Downloader res = new Gson().fromJson(file, Downloader.class);
-		res.localPath = workingDirectory + File.separator;
+		res.localPath = Paths.get(path).getParent().toString() + File.separator;
 		return res;
 	}
 
+	@Deprecated
 	Downloader(String imageSelector, String nextLinkSelector, String baseUrl, String startPath, String localPath)
 	{
 		this.image = new Property(imageSelector, "src");
@@ -46,13 +48,13 @@ public class Downloader
 		this.startPath = startPath;
 	}
 
-	Downloader Title(Property title)
+	public Downloader Title(Property title)
 	{
 		this.title = title;
 		return this;
 	}
 
-	Downloader ImageFormat(String format)
+	public Downloader ImageFormat(String format)
 	{
 		this.imageFormat = "." + format;
 		return this;
