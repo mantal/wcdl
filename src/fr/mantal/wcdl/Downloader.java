@@ -57,7 +57,7 @@ public class Downloader
 		{
 			try
 			{
-				document = Jsoup.connect(url.toString()).get();
+				document = Jsoup.connect(url.toString()).userAgent("Mozilla").get();
 			}
 			catch (IOException e)
 			{
