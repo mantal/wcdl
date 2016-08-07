@@ -37,29 +37,6 @@ public class Downloader
 		return res;
 	}
 
-	@Deprecated
-	Downloader(String imageSelector, String nextLinkSelector, String baseUrl, String startPath, String localPath)
-	{
-		this.image = new Property(imageSelector, "src");
-		this.next = new Property(nextLinkSelector, "href");
-		this.title = new Property();
-		this.baseUrl = baseUrl;
-		this.localPath = localPath + File.separator;
-		this.startPath = startPath;
-	}
-
-	public Downloader Title(Property title)
-	{
-		this.title = title;
-		return this;
-	}
-
-	public Downloader ImageFormat(String format)
-	{
-		this.imageFormat = "." + format;
-		return this;
-	}
-
 	void download()
 	{
 		URL url;
