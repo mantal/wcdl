@@ -29,8 +29,7 @@ public class Downloader
 		try {
 			file = FileUtils.readFileToString(new File(path), "utf-8");
 		} catch (IOException e) {
-			System.out.println("Can not open config file: " + e.getMessage());
-			System.exit(ExitError.CONFIG_OPEN_ERROR);
+			Error.Fatal(Error.FILE_ERROR, "Could not open config file: " + e.getMessage());
 		}
 		Downloader res = new Gson().fromJson(file, Downloader.class);
 		res.localPath = Paths.get(path).getParent().toString() + File.separator;
@@ -95,6 +94,9 @@ public class Downloader
 	{
 		String url = content.get(document);
 
+		if (url == null || url.isEmpty())
+			Error.Fatal(Error.CONFIG_ERROR, "Empty url");
+		
 		url = fixUrl(url);
 		try
 		{
