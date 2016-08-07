@@ -16,7 +16,7 @@ public class Main
 			arg0 = System.getProperty("user.dir");
 
 		if (Files.isDirectory(Paths.get(arg0)))
-			return Paths.get(arg0, "config.wcdl").toString();
+			return Paths.get(arg0, ".config.wcdl").toString();
 		return arg0;
 	}
 }

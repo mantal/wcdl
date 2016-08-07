@@ -17,11 +17,11 @@ public class Downloader
 	private String startPath;
 	private String localPath;
 
-	private Property image;
+	private Property content;
 	private Property next;
 	private Property title;
 
-	private String imageFormat = null;
+	private String fileFormat = null;
 
 	static Downloader fromConfig(String path)//todo better param name
 	{
@@ -66,24 +66,24 @@ public class Downloader
 				e.printStackTrace();
 			}
 
-			if (imageFormat == null)
-				imageFormat = getFileFormat(document);
+			if (fileFormat == null)
+				fileFormat = getFileFormat(document);
 
-			File file = Paths.get(localPath + i + " - " + escapePath(title.get(document)) + imageFormat).toFile();
+			File file = Paths.get(localPath + i + " - " + escapePath(title.get(document)) + fileFormat).toFile();
 
 			i++;
 			if (fileExist(file))
 				continue;
 
-			copyImageToFile(document, file);
+			copyContentToFile(document, file);
 
 		} while((url = getNextUrl(document)) != null);
 	}
 
 	private String getFileFormat(Document document) {
-		String imgUrl = image.get(document);
+		String contentUrl = content.get(document);
 
-		return imgUrl.substring(imgUrl.lastIndexOf('.'), imgUrl.length());
+		return contentUrl.substring(contentUrl.lastIndexOf('.'), contentUrl.length());
 	}
 
 	private String escapePath(String path)
@@ -91,9 +91,9 @@ public class Downloader
 		return path.replace('/', '-').replace('\\', '-').replace('?', '-');//todo regex
 	}
 
-	private boolean copyImageToFile(Document document, File file)
+	private boolean copyContentToFile(Document document, File file)
 	{
-		String url = image.get(document);
+		String url = content.get(document);
 
 		url = fixUrl(url);
 		try

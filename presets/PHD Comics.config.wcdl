@@ -1,7 +1,7 @@
 {
   "baseUrl": "http://www.phdcomics.com/comics/",
   "startPath": "archive.php?comicid=1",
-  "image":
+  "content":
   {
     "selector": "#comic",
     "attribute": "src",

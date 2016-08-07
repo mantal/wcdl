@@ -1,7 +1,7 @@
 {
   "baseUrl": "http://thedevilspanties.com/",
   "startPath": "archives/300",
-  "image":
+  "content":
   {
     "selector": "#comic-1>img",
     "attribute": "src",

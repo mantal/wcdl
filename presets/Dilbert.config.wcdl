@@ -1,7 +1,7 @@
 {
   "baseUrl": "http://dilbert.com/",
   "startPath": "strip/1989-04-16",
-  "image":
+  "content":
   {
     "selector": ".img-comic",
     "attribute": "src",

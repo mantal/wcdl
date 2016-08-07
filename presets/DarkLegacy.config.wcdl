@@ -1,7 +1,7 @@
 {
   "baseUrl": "http://www.darklegacycomics.com/",
   "startPath": "1",
-  "image":
+  "content":
   {
     "selector": ".comic-image",
     "attribute": "src",

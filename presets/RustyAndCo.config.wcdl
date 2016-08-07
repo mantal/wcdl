@@ -1,7 +1,7 @@
 {
   "baseUrl": "http://rustyandco.com/",
   "startPath": "comic/level-1-title/",
-  "image":
+  "content":
   {
     "selector": "#comic>img",
     "attribute": "src",
