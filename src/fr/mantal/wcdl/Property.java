@@ -11,6 +11,7 @@ class Property
 	private String selector = null;
 	private String attribute = null;
 	private String regex = null;
+	private boolean keepHtml = false;
 
 
 	Property(String selector, String attribute, String regex)
@@ -41,7 +42,15 @@ class Property
 
 		Element element = document.select(selector).first();
 
-		String text = attribute == null ? element.text() : element.attr(attribute);
+		if (element == null)
+			return null;
+
+		String text = null;
+
+		if (attribute == null)
+			text = keepHtml ? element.toString() : element.text();
+		else
+			text = element.attr(attribute);
 
 		if (regex == null)
 			return text;
