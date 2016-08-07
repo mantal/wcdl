@@ -67,12 +67,20 @@ public class Downloader
 				e.printStackTrace();
 			}
 
+			String titleString = title.get(document);
+
 			if (skipContent(document))
+			{
+				System.out.println("Skipping: '" + titleString + "' from " + url.toString());
 				continue;
+			}
+
+			System.out.println("Downloading: '" + titleString + "' from " + url.toString());
+
 			if (fileFormat == null)
 				fileFormat = getFileFormat(document);
 
-			File file = Paths.get(localPath + i + " - " + escapePath(title.get(document)) + fileFormat).toFile();
+			File file = Paths.get(localPath + i + " - " + escapePath(titleString) + fileFormat).toFile();
 
 			i++;
 			if (fileExist(file))
@@ -101,7 +109,7 @@ public class Downloader
 
 	private String escapePath(String path)
 	{
-		return path.replace('/', '-').replace('\\', '-').replace('?', '-');//todo regex
+		return path.replace('/', '-').replace('\\', '-').replace('?', '-').replace(':', '-');//todo regex
 	}
 
 	private boolean copyContentToFile(Document document, File file)
