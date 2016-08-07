@@ -24,6 +24,7 @@ public class Downloader
 	private Property keepCondition;
 
 	private String fileFormat = null;
+	private boolean internal = false;
 
 	static Downloader fromConfig(String path)//todo better param name
 	{
@@ -114,18 +115,43 @@ public class Downloader
 
 	private boolean copyContentToFile(Document document, File file)
 	{
-		String url = content.get(document);
+		String selectedContent = content.get(document);
 
-		if (url == null || url.isEmpty())
-			Error.Fatal(Error.CONFIG_ERROR, "Content's url not found or empty");
+		if (selectedContent == null || selectedContent.isEmpty())
+			Error.Fatal(Error.CONFIG_ERROR, "Content not found or empty");
 
-		url = fixUrl(url);
+		if (internal)
+			return downloadFromHTML(selectedContent, file);
+
+		selectedContent = fixUrl(selectedContent);
+
+		return downloadFromURL(selectedContent, file);
+	}
+
+	private boolean downloadFromURL(String url, File file)
+	{
 		try
 		{
 			FileUtils.copyURLToFile(new URL(url), file);
 		}
 		catch (IOException e)
 		{
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+
+	}
+
+	private boolean downloadFromHTML(String content, File file)
+	{
+		try
+		{
+			FileUtils.writeStringToFile(file, content, "UTF-16");
+		}
+		catch (IOException e)
+		{
+			Error.Fatal(Error.FILE_ERROR, "Could not write content to file");
 			e.printStackTrace();
 			return false;
 		}
