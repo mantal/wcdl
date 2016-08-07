@@ -36,7 +36,7 @@ class Property
 
 	String get(Document document)
 	{
-		if (selector == null)
+		if (selector == null)//TODO check if this should happen
 			return "";
 
 		Element element = document.select(selector).first();
@@ -49,7 +49,7 @@ class Property
 		Matcher matcher = Pattern.compile(regex).matcher(text);
 
 		if (!matcher.find())
-			return "REGEX DOES NOT MATCHES";//TODO
+			return null;
 		return matcher.group(1);
 	}
 }

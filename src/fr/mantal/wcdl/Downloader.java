@@ -95,8 +95,8 @@ public class Downloader
 		String url = content.get(document);
 
 		if (url == null || url.isEmpty())
-			Error.Fatal(Error.CONFIG_ERROR, "Empty url");
-		
+			Error.Fatal(Error.CONFIG_ERROR, "Content's url not found or empty");
+
 		url = fixUrl(url);
 		try
 		{
@@ -114,7 +114,7 @@ public class Downloader
 	{
 		String url = next.get(document);
 
-		if (url.isEmpty())
+		if (url == null || url.isEmpty())
 			return null;
 
 		url = fixUrl(url);
