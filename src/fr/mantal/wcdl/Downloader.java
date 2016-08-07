@@ -20,6 +20,8 @@ public class Downloader
 	private Property content;
 	private Property next;
 	private Property title;
+	private Property skipCondition;
+	private Property keepCondition;
 
 	private String fileFormat = null;
 
@@ -65,6 +67,8 @@ public class Downloader
 				e.printStackTrace();
 			}
 
+			if (skipContent(document))
+				continue;
 			if (fileFormat == null)
 				fileFormat = getFileFormat(document);
 
@@ -79,7 +83,17 @@ public class Downloader
 		} while((url = getNextUrl(document)) != null);
 	}
 
-	private String getFileFormat(Document document) {
+	private boolean skipContent(Document document)
+	{
+		if (skipCondition != null && skipCondition.get(document) != null)
+			return true;
+		if (keepCondition != null && keepCondition.get(document) == null)
+			return true;
+		return false;
+	}
+
+	private String getFileFormat(Document document)
+	{
 		String contentUrl = content.get(document);
 
 		return contentUrl.substring(contentUrl.lastIndexOf('.'), contentUrl.length());
