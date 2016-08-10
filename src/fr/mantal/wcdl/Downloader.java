@@ -11,7 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
 
-public class Downloader
+class Downloader
 {
 	private String baseUrl;
 	private String startPath;
@@ -25,6 +25,8 @@ public class Downloader
 
 	private String fileFormat = null;
 	private boolean internal = false;
+
+	private final static String userAgent = " wcdl/0.1 (+https://github.com/mantal/wcdl/issues)";
 
 	static Downloader fromConfig(String path)//todo better param name
 	{
@@ -60,7 +62,9 @@ public class Downloader
 		{
 			try
 			{
-				document = Jsoup.connect(url.toString()).userAgent("Mozilla").get();
+				document = Jsoup.connect(url.toString())
+						.userAgent(userAgent)
+						.get();
 			}
 			catch (IOException e)
 			{
@@ -132,7 +136,12 @@ public class Downloader
 	{
 		try
 		{
-			FileUtils.copyURLToFile(new URL(url), file);
+			byte[] buffer = Jsoup.connect(url.toString())
+					.userAgent(userAgent)
+					.ignoreContentType(true)
+					.execute()
+					.bodyAsBytes();
+			FileUtils.writeByteArrayToFile(file, buffer);
 		}
 		catch (IOException e)
 		{
