@@ -7,13 +7,12 @@ public class Main
 {
 	public static void main(String[] args)
 	{
-		Downloader.fromConfig(getPath(args[0])).download();
+		Downloader.fromConfig(getPath(args)).download();
 	}
 
-	private static String getPath(String arg0)
+	private static String getPath(String[] args)
 	{
-		if (arg0.isEmpty())
-			arg0 = System.getProperty("user.dir");
+		String arg0 = args.length > 1 ? args[0] : System.getProperty("user.dir");
 
 		if (Files.isDirectory(Paths.get(arg0)))
 			return Paths.get(arg0, ".config.wcdl").toString();
