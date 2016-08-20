@@ -80,8 +80,6 @@ class Downloader
 				continue;
 			}
 
-			System.out.println("Downloading: '" + titleString + "' from " + url.toString());
-
 			if (fileFormat == null)
 				fileFormat = getFileFormat(document);
 
@@ -89,7 +87,12 @@ class Downloader
 
 			i++;
 			if (fileExist(file))
+			{
+				System.out.println("Skipping: '" + titleString + "' from " + url.toString() + " (file exist)");
 				continue;
+			}
+
+			System.out.println("Downloading: '" + titleString + "' from " + url.toString());
 
 			copyContentToFile(document, file);
 
