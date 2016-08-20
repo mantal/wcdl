@@ -12,7 +12,7 @@ public class Main
 
 	private static String getPath(String[] args)
 	{
-		String arg0 = args.length > 1 ? args[0] : System.getProperty("user.dir");
+		String arg0 = args.length >= 1 ? args[0] : System.getProperty("user.dir");
 
 		if (Files.isDirectory(Paths.get(arg0)))
 			return Paths.get(arg0, ".config.wcdl").toString();
