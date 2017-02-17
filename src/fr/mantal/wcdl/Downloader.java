@@ -75,6 +75,11 @@ class Downloader
 
 			String titleString = title.get(document);
 
+			if (titleString == null || titleString.trim().isEmpty())
+			{
+				Error.Fatal(Error.CONFIG_ERROR, "Error: title not found or all whitespace");
+			}
+
 			if (skipContent(document))
 			{
 				System.out.println("Skipping: '" + titleString + "' from " + url.toString());
