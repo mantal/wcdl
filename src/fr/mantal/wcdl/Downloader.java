@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.HashMap;
 
 class Downloader
 {
@@ -28,7 +29,7 @@ class Downloader
 
 	private final static String userAgent = " wcdl/0.1 (+https://github.com/mantal/wcdl/issues)";
 
-	static Downloader fromConfig(String path)//todo better param name
+	static Downloader fromConfig(String path)
 	{
 		String file = null;
 		try {
@@ -117,7 +118,23 @@ class Downloader
 
 	private String escapePath(String path)
 	{
-		return path.replace('/', '-').replace('\\', '-').replace('?', '-').replace(':', '-');//todo regex
+		HashMap<Character, Character> replacementMap = new HashMap();
+
+		replacementMap.put('/', '⁄');
+		replacementMap.put('\\', '⃥');
+		replacementMap.put('?', '︖');
+		replacementMap.put(':', '︰');
+		replacementMap.put('<', '‹');
+		replacementMap.put('>', '›');
+		replacementMap.put(':', '꞉');
+		replacementMap.put('*', '∗');
+		replacementMap.put('"', '＂');
+		replacementMap.put('|', '∣');
+
+		for (HashMap.Entry<Character, Character> entry : replacementMap.entrySet())
+			path = path.replace(entry.getKey(), entry.getValue());
+
+		return path;
 	}
 
 	private boolean copyContentToFile(Document document, File file)
@@ -139,7 +156,7 @@ class Downloader
 	{
 		try
 		{
-			byte[] buffer = Jsoup.connect(url.toString())
+			byte[] buffer = Jsoup.connect(url)
 					.userAgent(userAgent)
 					.ignoreContentType(true)
 					.execute()
